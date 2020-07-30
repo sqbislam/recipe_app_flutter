@@ -3,7 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:beautiful_app/models/NavItems.dart';
+import 'package:beautiful_app/models/User.dart';
+import 'package:beautiful_app/screens/auth/Wrapper.dart';
 import 'package:beautiful_app/screens/home/HomePage.dart';
+import 'package:beautiful_app/services/auth.dart';
 import 'package:beautiful_app/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,13 +16,18 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => NavItems(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<NavItems>(
+          create: (context) => NavItems(),
+        ),
+        StreamProvider<User>.value(value: AuthService().user)
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Recipe App',
         theme: appTheme(),
-        home: HomePage(),
+        home: Wrapper(),
       ),
     );
   }

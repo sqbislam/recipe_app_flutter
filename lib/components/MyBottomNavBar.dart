@@ -27,15 +27,17 @@ class MyBottomNavBar extends StatelessWidget {
                     (index) => _buildNavBarItem(
                         iconData: navItems.items[index].icon,
                         press: () {
-                          navItems.changeNavIndex(index: index);
-
-                          // Change route based on click
-                          if (navItems.items[index].destinationChecker())
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        navItems.items[index].destination));
+                          // Do not push route if same index
+                          if (navItems.selectedIndex != index) {
+                            navItems.changeNavIndex(index: index);
+                            // Change route based on click
+                            if (navItems.items[index].destinationChecker())
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          navItems.items[index].destination));
+                          }// else maybe refresh page.
                         },
                         isActive:
                             navItems.selectedIndex == index ? true : false)),
