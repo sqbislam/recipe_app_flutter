@@ -1,23 +1,29 @@
+import 'package:beautiful_app/blocs/auth_blocs/authentication_bloc.dart';
 import 'package:beautiful_app/components/MyBottomNavBar.dart';
 import 'package:beautiful_app/screens/home/components/body.dart';
 import 'package:beautiful_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../size_config.dart';
 
 class HomePage extends StatelessWidget {
-  AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
+  final String name;
+
+  HomePage({Key key, this.name}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: buildAppBar(_auth),
+      appBar: buildAppBar(_auth, context),
       body: Body(),
       bottomNavigationBar: MyBottomNavBar(),
     );
   }
 
-  AppBar buildAppBar(AuthService _auth) {
+  AppBar buildAppBar(AuthService _auth, BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -33,6 +39,11 @@ class HomePage extends StatelessWidget {
         height: 80,
       ),
       actions: <Widget>[
+        Center(
+            child: Text(
+          'Welcome $name!',
+          style: TextStyle(color: Colors.black),
+        )),
         IconButton(
           icon: Icon(
             Icons.search,
@@ -48,8 +59,10 @@ class HomePage extends StatelessWidget {
             Icons.delete_forever,
             color: Colors.red,
           ),
-          onPressed: () async {
-            await _auth.signOut();
+          onPressed: () {
+            BlocProvider.of<AuthenticationBloc>(context).add(
+              AuthenticationLoggedOut(),
+            );
           },
         ),
         SizedBox(
